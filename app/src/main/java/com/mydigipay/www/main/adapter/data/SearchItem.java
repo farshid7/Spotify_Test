@@ -1,4 +1,4 @@
-package com.mydigipay.www.main.adapter;
+package com.mydigipay.www.main.adapter.data;
 
 public class SearchItem {
     private int type;

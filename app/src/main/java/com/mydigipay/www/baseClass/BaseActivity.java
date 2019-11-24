@@ -17,9 +17,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         init();
     }
 
-    protected void setView(@LayoutRes int layoutResID) {
-        setContentView(layoutResID);
-    }
 
 
 }

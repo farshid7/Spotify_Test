@@ -3,11 +3,9 @@ package com.mydigipay.www.main;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +15,8 @@ import com.mydigipay.www.api.ApiService;
 import com.mydigipay.www.api.entity.SearchResult;
 import com.mydigipay.www.baseClass.BaseActivity;
 import com.mydigipay.www.baseClass.OnUpdateData;
-import com.mydigipay.www.main.adapter.SearchDataProvider;
-import com.mydigipay.www.main.adapter.SearchItem;
+import com.mydigipay.www.main.adapter.RecyclerSectionItemDecoration;
+import com.mydigipay.www.main.adapter.SearchAdapter;
 import com.mydigipay.www.utils.AuthenticationResponseViewModel;
 import com.mydigipay.www.utils.Constants;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -35,10 +33,11 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
     private String keyWord;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private SearchAdapter searchAdapter;
 
     @Override
     protected void init() {
-        setView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         initView();
         setup();
     }
@@ -49,6 +48,11 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
         recyclerView = findViewById(R.id.recyclerView);
         textView = findViewById(R.id.textView);
         findViewById(R.id.clear).setOnClickListener(v -> textView.setText(""));
+        searchAdapter = SearchAdapter.Init(recyclerView);
+        RecyclerSectionItemDecoration sectionItemDecoration = new RecyclerSectionItemDecoration(getResources().getDimensionPixelSize(R.dimen.header),
+                true,
+                getSectionCallback());
+        recyclerView.addItemDecoration(sectionItemDecoration);
         textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -84,11 +88,32 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
 
     @Override
     public void onUpdate(SearchResult body) {
-        List<SearchItem>  searchItems=SearchDataProvider.Provide(body);
-        Toast.makeText(this, "number of find : "+searchItems.size(), Toast.LENGTH_SHORT).show();
+        searchAdapter.addItem(body);
         progressBar.setVisibility(View.GONE);
     }
 
+    private RecyclerSectionItemDecoration.SectionCallback getSectionCallback() {
+        return new RecyclerSectionItemDecoration.SectionCallback() {
+            @Override
+            public boolean isSection(int position) {
+                return position ==0||searchAdapter.getSearchItemList().get(position).getType()!=searchAdapter.getSearchItemList().get(position-1).getType();
+            }
+
+            @Override
+            public CharSequence getSectionHeader(int position) {
+                switch (searchAdapter.getSearchItemList().get(position).getType()) {
+                    case 1:
+                        return "Tracks";
+                    case 2:
+                        return "Artists";
+                    default:
+                        throw new RuntimeException("view type not valid!");
+                }
+
+
+            }
+        };
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

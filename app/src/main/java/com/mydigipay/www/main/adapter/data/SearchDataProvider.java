@@ -1,4 +1,4 @@
-package com.mydigipay.www.main.adapter;
+package com.mydigipay.www.main.adapter.data;
 
 import com.mydigipay.www.api.entity.ArtistItem;
 import com.mydigipay.www.api.entity.SearchResult;
@@ -10,9 +10,6 @@ import java.util.List;
 public class SearchDataProvider {
     public static List<SearchItem> Provide(SearchResult searchResult) {
         List<SearchItem> searchItems = new ArrayList<>();
-        SearchItem searchItemTitle = new SearchItem();
-            searchItemTitle.setName("Tracks");
-            searchItems.add(searchItemTitle);
         for (TrackItem trackItems :
                 searchResult.getTracks().getItems()) {
             SearchItem searchItem = new SearchItem();
@@ -32,10 +29,6 @@ public class SearchDataProvider {
             searchItem.setArtistName(artistName);
             searchItems.add(searchItem);
         }
-        SearchItem searchItemTitle2 = new SearchItem();
-        searchItemTitle2.setName("Artists");
-        searchItems.add(searchItemTitle2);
-
         for (ArtistItem artistItem :
                 searchResult.getArtists().getItems()) {
             SearchItem searchItem = new SearchItem();
@@ -47,7 +40,10 @@ public class SearchDataProvider {
                     searchItem.setImage(artistItem.getImages().get(0).getUrl());
                 }
             }
-            searchItems.add(searchItem);
+            for (int i = 0; i < 50; i++) {
+                searchItems.add(searchItem);
+
+            }
         }
 
         return searchItems;
