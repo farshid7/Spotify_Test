@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,10 +16,15 @@ import com.mydigipay.www.api.ApiService;
 import com.mydigipay.www.api.entity.SearchResult;
 import com.mydigipay.www.baseClass.BaseActivity;
 import com.mydigipay.www.baseClass.OnUpdateData;
+import com.mydigipay.www.main.adapter.SearchDataProvider;
+import com.mydigipay.www.main.adapter.SearchItem;
 import com.mydigipay.www.utils.AuthenticationResponseViewModel;
 import com.mydigipay.www.utils.Constants;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+
+import java.util.List;
+
 
 public class MainActivity extends BaseActivity implements OnUpdateData<SearchResult> {
     private String TAG = MainActivity.class.getSimpleName();
@@ -30,6 +34,7 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
     private String keyWord;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+
     @Override
     protected void init() {
         setView(R.layout.activity_main);
@@ -44,26 +49,27 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
         textView = findViewById(R.id.textView);
         findViewById(R.id.clear).setOnClickListener(v -> textView.setText(""));
         textView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
+            }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                    }
+            }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (s.length() == 2) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            keyWord=textView.getText().toString();
-                            mainPresenter.search(keyWord);
-                        }
-                    }
-                });
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 2) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    keyWord = textView.getText().toString();
+                    mainPresenter.search(keyWord);
+                }
+            }
+        });
     }
+
     private void setup() {
         model = ViewModelProviders.of(this).get(AuthenticationResponseViewModel.class);
         mainPresenter = new MainPresenter(ApiService.getService("no token"), this, this);
@@ -77,8 +83,8 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
 
     @Override
     public void onUpdate(SearchResult body) {
+        List<SearchItem>  searchItems=SearchDataProvider.Provide(body);
         progressBar.setVisibility(View.GONE);
-        Log.e(TAG, "onUpdate: ");
     }
 
 
