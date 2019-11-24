@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,6 +85,7 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
     @Override
     public void onUpdate(SearchResult body) {
         List<SearchItem>  searchItems=SearchDataProvider.Provide(body);
+        Toast.makeText(this, "number of find : "+searchItems.size(), Toast.LENGTH_SHORT).show();
         progressBar.setVisibility(View.GONE);
     }
 
