@@ -40,10 +40,8 @@ public class SearchDataProvider {
                     searchItem.setImage(artistItem.getImages().get(0).getUrl());
                 }
             }
-            for (int i = 0; i < 50; i++) {
                 searchItems.add(searchItem);
 
-            }
         }
 
         return searchItems;

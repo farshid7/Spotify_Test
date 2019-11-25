@@ -58,9 +58,9 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case 1:
-                return new TrackViewHolder(LayoutInflater.from(context).inflate(R.layout.item_track, parent, false));
+                return new TrackViewHolder(LayoutInflater.from(context).inflate(R.layout.item_track, parent, false),context);
             case 2:
-                return new ArtistViewHolder(LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false));
+                return new ArtistViewHolder(LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false),context);
             default:
                 throw new RuntimeException("view type not valid!");
         }

@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
 
     private View headerView;
     private TextView header;
+    private ImageView icon_track;
+    private ImageView icon_artist;
 
     public RecyclerSectionItemDecoration(int headerHeight, boolean sticky, @NonNull SectionCallback sectionCallback) {
         headerOffset = headerHeight;
@@ -45,6 +48,8 @@ public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
         if (headerView == null) {
             headerView = inflateHeaderView(parent);
             header = headerView.findViewById(R.id.name);
+            icon_track = headerView.findViewById(R.id.icon_track);
+            icon_artist = headerView.findViewById(R.id.icon_artist);
             fixLayoutSize(headerView, parent);
         }
 
@@ -55,6 +60,14 @@ public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
 
             CharSequence title = sectionCallback.getSectionHeader(position);
             header.setText(title);
+            if(title.equals("Tracks")){
+                icon_track.setVisibility(View.VISIBLE);
+                icon_artist.setVisibility(View.GONE);
+            }else {
+                icon_track.setVisibility(View.GONE);
+                icon_artist.setVisibility(View.VISIBLE);
+            }
+
             if (!previousHeader.equals(title) || sectionCallback.isSection(position)) {
                 drawHeader(c, child, headerView);
                 previousHeader = title;

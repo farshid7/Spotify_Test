@@ -19,18 +19,17 @@ import com.mydigipay.www.main.adapter.RecyclerSectionItemDecoration;
 import com.mydigipay.www.main.adapter.SearchAdapter;
 import com.mydigipay.www.utils.AuthenticationResponseViewModel;
 import com.mydigipay.www.utils.Constants;
+import com.mydigipay.www.utils.SpotifyAuthentication;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
-import java.util.List;
 
 
 public class MainActivity extends BaseActivity implements OnUpdateData<SearchResult> {
-    private String TAG = MainActivity.class.getSimpleName();
     private AuthenticationResponseViewModel model;
     private MainPresenter mainPresenter;
     private TextView textView;
-    private String keyWord;
+    private String keyWord="";
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private SearchAdapter searchAdapter;
@@ -40,6 +39,8 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
         setContentView(R.layout.activity_main);
         initView();
         setup();
+        SpotifyAuthentication.Builder(this).loginRequest();
+
     }
 
     private void initView() {
@@ -80,7 +81,7 @@ public class MainActivity extends BaseActivity implements OnUpdateData<SearchRes
         mainPresenter = new MainPresenter(ApiService.getService("no token"), this, this);
         model.getAuthenticationResponseViewModel().observe(this, authenticationResponse -> {
             mainPresenter.setNewApi(ApiService.getService(authenticationResponse.getAccessToken()));
-            if (!keyWord.isEmpty()) {
+            if (!keyWord.equals("")) {
                 mainPresenter.search(keyWord);
             }
         });
